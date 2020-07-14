@@ -12,22 +12,37 @@
             <button class="btn btn-primary">Generate!</button>
           </div>
         </form>
+        <img :src="thumbnailUrl"/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'App',
 
-  data() { return {
-    websiteUrl: '',
-  } },
+  data() {
+    return {
+      websiteUrl: '',
+      thumbnailUrl: '',
+    }
+  },
 
   methods: {
     makeWebsiteThumbnail() {
-      console.log(`I should create a website thumbnail of ${this.websiteUrl}`);
+      // Call the Go API, in this case we only need the URL parameter.
+      axios.post("http://localhost:3000/api/thumbnail", {
+      url: this.websiteUrl,
+      })
+      .then((response) => {
+      this.thumbnailUrl = response.data.screenshot;
+      })
+      .catch((error) => {
+      window.alert(`The API returned an error: ${error}`);
+      })
     }
   }
 }
